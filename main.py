@@ -1,8 +1,6 @@
 from parsing import Parser
 from datatypes import *
 
-DEBUG = False
-
 ## TODO # change capturing
 ##          - who will rid me of this turbulent priest
 ##          - get rid of the last regex statement from the parser
