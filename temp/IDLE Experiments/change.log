@@ -1,0 +1,11 @@
+Argument change:
+    node=Node -> node=None with corresponding later replacement
+
+Pre-check:
+    see if it hasn't a branch
+
+Tree:
+    make sure tree.tree is passed, not a Tree instance
+
+Add `node.negate` on compare tree instance:
+    if/else statement

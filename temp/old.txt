@@ -1,0 +1,44 @@
+[] without groups (problem: not x or not y instead of not x and not y) '''
+                joiner = Join()
+                negate = False
+                if expr[index + 1] == '^':
+                    index += 1
+                    negate = True
+                closer = re.search(r'[^\\](\])', expr[index:])
+                end, over = index + closer.start(1), closer.end(1)
+                for letter in cls.getletters(expr[index + 1:end]):
+                    node.add(Node(letter, branches=[joiner], negate=negate))
+                node = joiner
+                index += over - 1
+                '''
+
+regex #xyz# alternative '''
+            if re.match('#[A-Za-z]+#', stringcont):
+	                letters.append(re.match('#([A-Za-z]+)#', stringcont).group(1))
+                index += len(re.match('#([A-Za-z]+)#', stringcont).group())
+            '''
+
+unneeded in the parser '''
+class UnusedMethods:
+
+    @classmethod
+    @typed
+    def bracketbreakdown(cls, opener: str, closer: str, string: str) -> list:
+        '''This function takes a string, and then breaks it into lists, with each opening bracket breaking it into
+            a sub list which contains the breakdown of that substring.
+
+            f.x.: 'Hello (Matthew (Ross) Rachar) World(!)' -> ['Hello ', ['Matthew ', ['Ross'], 'Rachar'], ' World', ['!']]'''
+        if not re.search(opener, string) and not re.search(closer, string):  # If both of the brakets aren't in the string
+            return [string]  # don't bother parsing it, just return it in a list (to maintain compatibility)
+        if len(re.findall(opener, string)) != len(re.findall(closer, string)):  # When there aren't as many closing brackets as opening brackets
+            raise ValueError('Unbalanced brackets')  # the string must be invalid, one must be started without being closed
+
+        breakdown = []
+        while re.search(opener, string):
+            openermatch, closermatch = cls.findbalancedpair(opener, closer, string)
+            breakdown.append(string[:openermatch.start])
+            breakdown.append(cls.bracketbreakdown(opener, closer, string[openermatch.end:closermatch.start]))
+            string = string[closermatch.end:]
+        breakdown.append(string)
+        return breakdown
+'''
