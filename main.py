@@ -1,10 +1,6 @@
 from parsing import Parser
 from datatypes import *
 
-## TODO # change capturing
-##          - who will rid me of this turbulent priest
-##          - get rid of the last regex statement from the parser
-##          - allow for unnamed captures (auto-enumerating)
 ## TODO # comment and clean
 
 

@@ -1,9 +1,7 @@
 from datatypes import *
 from typeenforcing import typed
-import re
 
 ## FIXME # get rid of the random node at the front of trees with set branches
-## TODO # final regex to get rid of! :-)
 ## TODO # CLEAN!
 
 def rcprint(value, indent=0):
