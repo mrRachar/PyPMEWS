@@ -42,3 +42,10 @@ class UnusedMethods:
         breakdown.append(string)
         return breakdown
 '''
+
+last refuge of regex ''' Old Regex Code
+                if re.match(r"[A-Za-z][A-Za-z0-9]*(?:\[\])?\:", expr[startoffset:index + closeoffset.start]):
+                    capture = re.match(r"([A-Za-z][A-Za-z0-9]*(?:\[\])?)\:", expr[startoffset:index + closeoffset.start])
+                    startoffset += capture.end()
+                    group.name = capture.group(1)
+                '''

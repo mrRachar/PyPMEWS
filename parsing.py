@@ -48,10 +48,10 @@ class Parser(metaclass=ParserMeta):
                 group = Tree()
                 node <<= group
                 node = group.tree
-                if re.match(r"[A-Za-z][A-Za-z0-9]*(?:\[\])?\:", expr[startoffset:index + closeoffset.start]):
-                    capture = re.match(r"([A-Za-z][A-Za-z0-9]*(?:\[\])?)\:", expr[startoffset:index + closeoffset.start])
-                    startoffset += capture.end()
-                    group.name = capture.group(1)
+
+                if cls.getcaturegroup(expr[startoffset:index + closeoffset.start]):
+                    length, group.name = cls.getcaturegroup(expr[startoffset:index + closeoffset.start], sideeffect=True)
+                    startoffset += length + 1
 
                 # See if there is a | in the shallowest depth, if so switch to 'or'
                 if cls.shallowfind(r'\|', r'\(', r'\)', expr[startoffset:index + closeoffset.start]):
@@ -249,21 +249,24 @@ class Parser(metaclass=ParserMeta):
         else:
             return False
 
-    def getcaturegroup(self, string: str):
+    @classmethod
+    @typed
+    def getcaturegroup(cls, string: str, sideeffect: bool=False) -> (tuple, bool):
         string = string.lstrip(' \t')
         if not ':' in string:
             return False
         name = string[:string.index(':')]
+        length = len(name)
         isarray = name.endswith('[]')
         if isarray:
             name = name[:-2]
         if name == '':
-            self.capturenumber += 1
-            return str(self.capturenumber -1) if not isarray else str(self.capturenumber -1) + '()'
+            cls.capturenumber += int(sideeffect)
+            return length, (str(cls.capturenumber -1) if not isarray else str(cls.capturenumber -1) + '[]')
         if not name[0].isalpha() or not all(letter.isalnum() for letter in name[1:]):
             return False
         else:
-            return name + ('' if not isarray else '()')
+            return length, name + ('' if not isarray else '[]')
 
     @classmethod
     @typed
@@ -297,7 +300,7 @@ class Parser(metaclass=ParserMeta):
 if __name__ == '__main__':
     #print(', '.join("'{}'".format(x) for x in Parser.repeatrange('2-4')))
     #parsed = Parser.parse('[1-3A-z]hello')
-    parsed = Parser.parse(r'[#alpha#](word[]:m.{3})(word[]:hello){2}hello')
+    parsed = Parser.parse(r'[#alpha#](:m.{3})(:hello){2}hell(:o)')
     #parsed = Parser.parse('a(hello){2-4}.5\(')
     #parsed = Parser.parse('ak{%2-5}.5\(')
     #parsed = Parser.parse('')
