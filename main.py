@@ -216,67 +216,90 @@ class Matcher:
 
     @typed
     def compare(self, string: str, node=None) -> Match:
-        letter = string[0]
-        match = Match()
-        node = node or self.tree.tree
+        '''Compare the string against the node tree segment, seeing if there
+        is a way they could be equal.
 
-        if isinstance(node, Tree):
-            if node.negate:
-                match = self.negativecompare(string, node.tree)
-            else:
-                match = self.compare(string, node.tree)
-            if not match:
-                return match
-            else:
-                string = string[len(match.match):]
-                if not string:
-                    return match if not node.branches else Match()
-                letter = string[0]
-                if node.name:
-                    match.update({node.name: match.match})
+        Makes sure this node equals the first letter, and then tries to match
+        it with branches, until it finds one that matches.
 
-        if match or self.equals(letter, node):
-            if not string[1:] and not isinstance(node, Join):
-                return Match(letter) if not node.branches else Match()
-            elif node.branches:
-                for branch in node.branches:
-                    branchmatch = self.compare(string[int(not isinstance(node, Join)):], branch) #don't progress if we have a join
-                    if not branchmatch:
-                        continue
-                    match.match += letter if not isinstance(node, Join) else ''
-                    match += branchmatch
-                    return match
-                else:
-                    return Match()
-            else:
-                return Match(letter if not isinstance(node, Join) else '')
-        else:
-            return Match()
+        Will return an empty, falsy Match if no match made
+
+        :param string: str: the string to compare against
+        :param node: Node, type(None): the node to start at
+        '''
+        letter = string[0]              #Set the letter to be compared against to be the first of the string
+        node = node or self.tree.tree   #If there was no node given, default to the node at the top of the tree
+        match = Match()                 #Get a match ready, so that later there will be a match, no matter what
+
+        if isinstance(node, Tree):                              #If we've got a tree
+            if node.negate:                                     #Check if it is negated, and if so
+                match = self.negativecompare(string, node.tree) # negatively compare it
+            else:                                           #If it is not negated,
+                match = self.compare(string, node.tree)     # just compare it normally
+            if not match:           #When no match is made
+                return match        # return this no match Match
+            else:                                       #When we have a match
+                string = string[len(match.match):]      #get rid of the string up till there
+                if not string:                                      #If that leaves the string empty
+                    return match if not node.branches else Match()  # return the match collected, unless the tree has more, so no match was made
+                letter = string[0]                          #Reset the letter to the beginning of the new string
+                if node.name:                               #If the tree has a name,
+                    match.update({node.name: match.match})  # add the captured text to it
+
+        if self.equals(letter, node):                      #When a match has been made already, or the letter and the node's value are equal
+            if not string[1:] and not isinstance(node, Join):           #If the string has run out,
+                return Match(letter) if not node.branches else Match()  # return the match so far, unless the tree has more, so no match was made
+            elif node.branches:                 #If it has branches,
+                for branch in node.branches:    # go through each branch
+                    #Compare the string following this letter, except that Joins don't have any value so check this letter again if it is a Join
+                    branchmatch = self.compare(string[int(not isinstance(node, Join)):], branch)
+                    if not branchmatch:     #If not a match was made,
+                        continue            # then check the next branch
+                    match.match += letter if not isinstance(node, Join) else '' #Add the current letter to the match if we haven't a join
+                    match += branchmatch    #Add the match of the branch onto this match,
+                    return match            # and return it all
+                else:               #If there was never a match made in the branches
+                    return Match()  # return an empty match
+            else:                                                           #If there are no branches,
+                return Match(letter if not isinstance(node, Join) else '')  # return what we got
+        else:               #If it isn't equal and no match was made earlier,
+            return Match()  # then we haven't got a match
 
     @typed
     def equals(self, letter: str, node: Node) -> bool:
-        if isinstance(node, Join):
-            return True
-        if len(node.value) > 1:
-            if node.value == 'any':
-                return (node.value != '\n') if not node.negate else False
-            elif node.value[1] == '-':
-                result = ord(letter) in range(ord(node.value[0]), ord(node.value[2]) + 1)
-                if node.negate:
-                    return not result
-                return result
-            elif node.value in ['alphanum', 'alpha', 'space']:
+        '''Sees if the letter could be equal to the node
+
+        Will check if they are directly equal, but also if some other value such as
+        'any' or 'space' or a range is set to the nodes value, will see if the letter
+        satisfies the nodes value
+
+        If it is a join, will automatically return true as Joins (and Trees) have no value
+
+        :param letter: str: the letter to compare
+        :param node: Node: the node whose value to compare
+        '''
+        if isinstance(node, Join):  #If we have a Join
+            return True             # return True as they have no real value
+        if len(node.value) > 1:         #If the nodes value isn't a simple letter, do further testing
+            if node.value == 'any':                                         #If it can be anything
+                return (node.value != '\n') if not node.negate else False   # check it isn't a newline 'cause I don't think they count
+            elif node.value[1] == '-':                                                      #If it has a line in the middle,
+                result = ord(letter) in range(ord(node.value[0]), ord(node.value[2]) + 1)   # see if the letter is in the ascii range given
+                if node.negate:         #If it is negated,
+                    return not result   # negate the result
+                return result           #Otherwise, don't, just don't
+            elif node.value in ['alphanum', 'alpha', 'space']:  #If it is a special name
                 result = {
                     'alphanum': lambda x: ord('A') <= ord(x) <= ord('Z') or ord('a') <= ord(x) <= ord('z') or ord('0') <= ord(x) <= ord('9'),
                     'alpha': lambda x: ord('A') <= ord(x) <= ord('Z') or ord('a') <= ord(x) <= ord('z'),
                     'space': lambda x: x in (' ', '\t'),
-                }[node.value](letter)
-                if node.negate:
-                    return not result
-                return result
-        if node.negate:
-            return node.value != letter
-        return node.value == letter
+                }[node.value](letter)   #Get the comparision function to see if the letter satisfies the conditions place of it.
+                if node.negate:         #If you must,
+                    return not result   # negate it
+                return result           #Only if you must, though
+        if node.negate:                     #So it isn't special, see if we still have to negate it
+            return node.value != letter     #Return whether they are not equal
+        return node.value == letter     #No negation, so return if it is just some simple equals thing
 
 ## TESTS ##
 
