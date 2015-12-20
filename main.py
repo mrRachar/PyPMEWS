@@ -254,7 +254,7 @@ class Matcher:
             return Match()
 
     @typed
-    def equals(self, letter: str, node: Node):
+    def equals(self, letter: str, node: Node) -> bool:
         if isinstance(node, Join):
             return True
         if len(node.value) > 1:
