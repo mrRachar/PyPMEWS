@@ -42,6 +42,8 @@ Match<he(l){2}o world(:\?)?>('hello world?', 'hello world?', {0: '?'})
   * `[^<x><y><z>]` - anything but x, y, or z
 * `(<expr>)` - a subexpression
   * `(:<expr>)` - a capture group
+  * `([]:<expr>)` - a capturing collection, will not overide, but instead generate a list, such as when you need to accumulate captures of repeated segments
   * `(<name>:<expr>)` - a named capture group
+  * `(<name>[]:<expr>)` - a named capturing collection
 * `(<expr_x>|<expr_y)` - choice
 
