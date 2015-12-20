@@ -20,9 +20,11 @@ def rcprint(value, indent=0):
 
 class ParserMeta(type):
     def __call__(self, expr: str):
+        self.capturenumber = 0 # Reset capture number
         return Tree(self.parse(expr))
 
 class Parser(metaclass=ParserMeta):
+    capturenumber = 0 # Number for enumerated capture groups
 
     @classmethod
     def parse(cls, expr: str) -> Node:
@@ -246,6 +248,22 @@ class Parser(metaclass=ParserMeta):
                 return Span(i, i+1)
         else:
             return False
+
+    def getcaturegroup(self, string: str):
+        string = string.lstrip(' \t')
+        if not ':' in string:
+            return False
+        name = string[:string.index(':')]
+        isarray = name.endswith('[]')
+        if isarray:
+            name = name[:-2]
+        if name == '':
+            self.capturenumber += 1
+            return str(self.capturenumber -1) if not isarray else str(self.capturenumber -1) + '()'
+        if not name[0].isalpha() or not all(letter.isalnum() for letter in name[1:]):
+            return False
+        else:
+            return name + ('' if not isarray else '()')
 
     @classmethod
     @typed
