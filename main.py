@@ -50,7 +50,6 @@ class Match:
 
     def update(self, dictionary):
         dictionary = dictionary if isinstance(dictionary, dict) else dict(dictionary)
-        DEBUG and print('#update', dictionary)
         for key, value in dict(dictionary).items():
             if key.endswith('[]'):
                 key = key[:-2]
@@ -118,7 +117,6 @@ class Matcher:
                 continue
             match = Match(letter if not isinstance(node, Join) else '')
             match += branchmatch
-            DEBUG and print('#negbranch1', match)
             return match
 
         else:
@@ -132,7 +130,6 @@ class Matcher:
         node = node or self.tree.tree
 
         if isinstance(node, Tree):
-            DEBUG and print('#tree1', node)
             if node.negate:
                 match = self.negativecompare(string, node.tree)
             else:
@@ -146,7 +143,6 @@ class Matcher:
                 letter = string[0]
                 if node.name:
                     match.update({node.name: match.match})
-                DEBUG and print('#tree2', match)
 
         if match or self.equals(letter, node):
             if not string[1:] and not isinstance(node, Join):
@@ -154,12 +150,10 @@ class Matcher:
             elif node.branches:
                 for branch in node.branches:
                     branchmatch = self.compare(string[int(not isinstance(node, Join)):], branch) #don't progress if we have a join
-                    DEBUG and print('#branch1', branchmatch)
                     if not branchmatch:
                         continue
                     match.match += letter if not isinstance(node, Join) else ''
                     match += branchmatch
-                    DEBUG and print('#branch2', match)
                     return match
                 else:
                     return Match()
@@ -170,12 +164,10 @@ class Matcher:
 
     @typed
     def equals(self, letter: str, node: Node):
-        DEBUG and print('#equals', letter, node, node.negate)
         if isinstance(node, Join):
             return True
         if len(node.value) > 1:
             if node.value == 'any':
-                DEBUG and print('#any', node.value, letter)
                 return (node.value != '\n') if not node.negate else False
             elif node.value[1] == '-':
                 result = ord(letter) in range(ord(node.value[0]), ord(node.value[2]) + 1)
