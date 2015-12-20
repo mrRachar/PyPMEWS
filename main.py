@@ -1,5 +1,3 @@
-import re
-
 from parsing import Parser
 from datatypes import *
 
