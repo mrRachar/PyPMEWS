@@ -303,7 +303,7 @@ class Matcher:
 #a = Matcher('a{%3-5}aa')
 a = Matcher(r'\d(word[]:m.{3})(word[]:hello|world){2}hello')
 #a = Matcher('[^efgijk](blur:[^aiouy]ll)o,\s[wd]orl[^t]')
-rcprint(a.tree)
+#rcprint(a.tree)
 print(a.match('9mnnehelloworldhelloj'))
 #print(a.match('9mnnehellohellohello'))
 #m = Matcher('kkk(e){4}')

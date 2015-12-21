@@ -37,7 +37,8 @@ class Parser(metaclass=ParserMeta):
                     'd': '0-9',
                     'c': 'alpha',
                     's': 'space',
-                    'w': 'alphanum'
+                    'w': 'alphanum',
+                    'b': 'breaker',
                 }.get(expr[index].lower(), expr[index])
                 node <<= Node(char, (char != expr[index] and expr[index].isupper()))
 
@@ -174,7 +175,8 @@ class Parser(metaclass=ParserMeta):
                     'd': '0-9',
                     'c': 'alpha',
                     's': 'space',
-                    'w': 'alphanum'
+                    'w': 'alphanum',
+                    'b': 'breaker',
                 }.get(stringcont[1], stringcont[1])
                 letters.append(char)
                 index += 2

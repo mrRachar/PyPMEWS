@@ -106,11 +106,12 @@ class Node:
                 if self.negate:         #If it is negated,
                     return not result   # negate the result
                 return result           #Otherwise, don't, just don't
-            elif self.value in ['alphanum', 'alpha', 'space']:  #If it is a special name
+            elif self.value in ['alphanum', 'alpha', 'space', 'breaker']:  #If it is a special name
                 result = {
                     'alphanum': lambda x: ord('A') <= ord(x) <= ord('Z') or ord('a') <= ord(x) <= ord('z') or ord('0') <= ord(x) <= ord('9'),
                     'alpha': lambda x: ord('A') <= ord(x) <= ord('Z') or ord('a') <= ord(x) <= ord('z'),
-                    'space': lambda x: x in (' ', '\t'),
+                    'space': lambda x: x in ' \t',
+                    'breaker': lambda x: x in ' \n\t',
                 }[self.value](letter)   #Get the comparison function to see if the letter satisfies the conditions place of it.
                 if self.negate:         #If you must,
                     return not result   # negate it
