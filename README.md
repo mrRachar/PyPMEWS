@@ -11,14 +11,16 @@ Implementation practically completed, all features implemented. Does not have `^
 ##How To Use
 To create a pattern, just create a new `Matcher` object:
 
-```mypattern = Matcher('he(l){2}o world(:\?)?')```
+```python
+mypattern = Matcher('he(l){2}o world(:\?)?')
+```
 
 To use it, just match it against a string with the `match` method. You will recieve a `Match` object.
 
-```
+```python
 >>> match = mypattern.match('hello world?')
 >>> match
-Match<he(l){2}o world(:\?)?>('hello world?', 'hello world?', {0: '?'})
+"Match<he(l){2}o world(:\?)?>('hello world?', 'hello world?', {0: '?'})"
 ```
 
 ##Syntax
