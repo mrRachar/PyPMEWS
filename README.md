@@ -12,15 +12,19 @@ Implementation practically completed, all features implemented. Does not have `^
 To create a pattern, just create a new `Matcher` object:
 
 ```python
-mypattern = Matcher('he(l){2}o world(:\?)?')
+#Create a new matcher with the expression, and store it away in `mypattern` for later use
+mypattern = Matcher('he(l){2}o world(:\?)?') 
 ```
 
 To use it, just match it against a string with the `match` method. You will recieve a `Match` object.
-
 ```python
->>> match = mypattern.match('hello world?')
->>> match
-"Match<he(l){2}o world(:\?)?>('hello world?', 'hello world?', {0: '?'})"
+>>> match = mypattern.match('hello world?')   #See if 'hello world?' matches the expression
+>>> match                                     #Access the match returned
+"Match<he(l){2}o world(:\?)?>('hello world?', 'hello world?', {'0': '?'})"
+>>> match == 'hello world?'                   #Compare if the entire match found is 'helloworld?'
+True
+>>> match.groups                              #All the capture groups collected
+{'0': '?'}
 ```
 
 ##Syntax
