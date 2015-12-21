@@ -52,11 +52,11 @@ class Parser(metaclass=ParserMeta):
                     startoffset += length + 1
 
                 # See if there is a | in the shallowest depth, if so switch to 'or'
-                if cls.shallowfind(r'\|', r'\(', r'\)', expr[startoffset:index + closeoffset.start]):
+                if cls.shallowfind('|', '(', ')', expr[startoffset:index + closeoffset.start]):
                     if expr[startoffset] == '^':
                         closeoffset += 1
                         group.negate = True
-                    for expression in cls.shallowsplit(r'\|', r'\(', r'\)', expr[startoffset:index + closeoffset.start]):
+                    for expression in cls.shallowsplit('|', '(', ')', expr[startoffset:index + closeoffset.start]):
                         node.add(cls.parse(expression))
                 else:
                     node <<= cls.parse(expr[startoffset:index + closeoffset.start])
@@ -298,7 +298,7 @@ class Parser(metaclass=ParserMeta):
 if __name__ == '__main__':
     #print(', '.join("'{}'".format(x) for x in Parser.repeatrange('2-4')))
     #parsed = Parser.parse('[1-3A-z]hello')
-    parsed = Parser.parse(r'[#alpha#](:m.{3})(:hello){2}hell(:o)')
+    parsed = Parser.parse(r'[#alpha#](:m.{3})(:hello|world){2}hell(:o)')
     #parsed = Parser.parse('a(hello){2-4}.5\(')
     #parsed = Parser.parse('ak{%2-5}.5\(')
     #parsed = Parser.parse('')

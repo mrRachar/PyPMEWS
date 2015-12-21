@@ -1,5 +1,5 @@
-from parsing import Parser  #Parses expressions
-from datatypes import *     #Handles data to do with expressions
+from parsing import Parser, rcprint     #Parses expressions, rcprint for debugging only
+from datatypes import *                 #Handles data to do with expressions
 
 ## TODO # comment and clean
 
@@ -276,10 +276,10 @@ class Matcher:
 ## TESTS ##
 
 #a = Matcher('a{%3-5}aa')
-a = Matcher(r'\d(word[]:m.{3})(word[]:hello){2}hello')
+a = Matcher(r'\d(word[]:m.{3})(word[]:hello|world){2}hello')
 #a = Matcher('[^efgijk](blur:[^aiouy]ll)o,\s[wd]orl[^t]')
-print('#tree', a.tree)
-print(a.match('9mnnehellohellohelloj'))
+rcprint(a.tree)
+print(a.match('9mnnehelloworldhelloj'))
 #print(a.match('9mnnehellohellohello'))
 #m = Matcher('kkk(e){4}')
 #print(m.match('kkkeeeee'))
