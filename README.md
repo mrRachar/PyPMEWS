@@ -2,11 +2,10 @@
 A python implementation of the Pattern Matching and Extraction With Strings system.
 
 #### TLDR;
-Regex, but different: captures all repeated groups (if you want it to), slightly more consistant symbols
+Regex with a twist. Capture repeated groups if you want, and more consistant characters and meanings.
 
 ##### Important!
-Implementation practically completed, all features implemented. Does not have `^` start and `$` end yet, and also not ready for production use, as there may be a bug or two (or more).
-100% Python implementation means it mightn't be the fastest module you've seen
+Implementation essentially completed, but 100% Python implementation means it mightn't be the fastest module you've seen (see below).
 
 ##How To Use
 To create a pattern, just create a new `Matcher` object:
@@ -61,3 +60,4 @@ Speed in matching is currently the main problem, probably due to the recursive a
   * `(<name>[]:<expr>)` - a named capturing collection
 * `(<expr_x>|<expr_y)` - choice
 
+No `^` start and `$` end yet. Just use methods to acheive same effect.
