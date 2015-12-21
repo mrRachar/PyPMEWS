@@ -182,14 +182,25 @@ class Matcher:
 
     @typed
     def search(self, string) -> Match:
-        """NotImplemented fully"""
-        for substring in (string[i:] for i in range(len(string))):
-            match = self.compare(substring)
-            if match:
-                match.expression = self.__expression
-                return match
+        """Iteratively search through the string until a match is found
+
+        Will start at the beginning of the string, and try and make a match.
+        It will continue starting at the next letter of the string, until a
+        match is made. If no match is made by the end, a empty match will
+        be returned
+
+        :param string: str: the string to match against the expression
+        """
+        #Go through the substring of i 'til the end up til one short of the length of the string
+        for substring in (string[i:] for i in range(len(string)-1)):
+            match = self.compare(substring) #Try and make a match
+            if match:                                   #If the match was successful
+                match.expression = self.__expression    #Set the match up with the expression,
+                match.string = string                   # and the given string
+                return match                            #Return the match found
         else:
-            return Match(expr=self.__expression)
+            #If no match was made, return an empty match object, still with match information
+            return Match(expr=self.__expression, string=string)
 
     @typed
     def negativecompare(self, string: str, node=None) -> Match:
