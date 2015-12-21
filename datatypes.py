@@ -99,7 +99,7 @@ class Node:
         :param node: Node: the node whose value to compare
         """
         if len(self.value) > 1:         #If the nodes value isn't a simple letter, do further testing
-            if self.value == 'any':                                         #If it can be anything
+            if self.value == 'any':                                         #If it can be anything,
                 return (self.value != '\n') if not self.negate else False   # check it isn't a newline 'cause I don't think they count
             elif self.value[1] == '-':                                                      #If it has a line in the middle,
                 result = ord(letter) in range(ord(self.value[0]), ord(self.value[2]) + 1)   # see if the letter is in the ascii range given
