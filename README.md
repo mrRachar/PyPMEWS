@@ -27,6 +27,13 @@ True
 {'0': '?'}
 ```
 
+####Speed
+* To create the `Matcher` object in the example above, which is when the matching tree is built, in a test took around 3ms
+* The match itself, took around 10 ms
+* Using the search method, can take significantly longer, but in general doesn't
+
+Speed in matching is currently the main problem, probably due to the recursive approach. A iterative approach may be taken to speed things up in the future.
+
 ##Syntax
 * `\<char>` - escape character
   * `\d` - number
