@@ -227,8 +227,14 @@ class Matcher:
         :param string: str: the string to compare against
         :param node: Node, type(None): the node to start at
         '''
-        letter = string[0]              #Set the letter to be compared against to be the first of the string
         node = node or self.tree.tree   #If there was no node given, default to the node at the top of the tree
+        if string == '':    #If we've run out of string
+            #Check to see if the tree is not exhausted (there are more branches, and not just one empty Join at most)
+            if node.branches and not (len(node.branches) == 1 and type(node.branches[0]) is Join and not node.branches[0].branches):
+                return Match()      #Then the tree is not yet exhausted, so there wasn't a match with the entire tree
+            else:                   #If the tree has been exhausted as well as the string, the match is successful,
+                return Match('')    # but with no letter, so return a non-falsy empty string match is returned
+        letter = string[0]              #Set the letter to be compared against to be the first of the string
         match = Match()                 #Get a match ready, so that later there will be a match, no matter what
 
         if isinstance(node, Tree):                              #If we've got a tree
@@ -240,16 +246,17 @@ class Matcher:
                 return match        # return this no match Match
             else:                                       #When we have a match
                 string = string[len(match.match):]      #get rid of the string up till there
-                if not string:                                      #If that leaves the string empty
-                    return match if not node.branches else Match()  # return the match collected, unless the tree has more, so no match was made
-                letter = string[0]                          #Reset the letter to the beginning of the new string
                 if node.name:                               #If the tree has a name,
                     match.update({node.name: match.match})  # add the captured text to it
+                if not string:      #If that leaves the string empty, return
+                    #If there are branches, and there is not just one empty Join
+                    if node.branches and not (len(node.branches) == 1 and type(node.branches[0]) is Join and not node.branches[0].branches):
+                        return Match()  #Then the tree is not yet exhausted, so there wasn't a match
+                    return match    #Seeing as the tree is exhausted, we can return the match we have made
+                letter = string[0]                          #Reset the letter to the beginning of the new string
 
         if self.equals(letter, node):                      #When a match has been made already, or the letter and the node's value are equal
-            if not string[1:] and not isinstance(node, Join):           #If the string has run out,
-                return Match(letter) if not node.branches else Match()  # return the match so far, unless the tree has more, so no match was made
-            elif node.branches:                 #If it has branches,
+            if node.branches:                   #If it has branches,
                 for branch in node.branches:    # go through each branch
                     #Compare the string following this letter, except that Joins don't have any value so check this letter again if it is a Join
                     branchmatch = self.compare(string[int(not isinstance(node, Join)):], branch)
