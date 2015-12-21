@@ -112,6 +112,20 @@ class Match:
             else:
                 self.groups[key] = value    #If it just a normal value, add it whether it overrides or not
 
+    @typed
+    def __eq__(self, other: (str, type(None))) -> bool:
+        """Is the string equal to the whole match
+
+        Compares the string to the whole match, returning equal if they are
+        the same, and the match is not False (empty). If equated to None, will
+        return whether the match is empty
+        """
+        if not self:                #If this Match is empty,
+            return other is None    # only return True if equated with empty
+        elif other is None:     #If the other is empty,
+            return False        # return False, as this is not
+        return self._match == other     #Seeing as they're both strings, see if they are equal
+
 
 class Matcher:
     """A matcher with a stored expression to match against strings
