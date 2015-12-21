@@ -20,7 +20,7 @@ To use it, just match it against a string with the `match` method. You will reci
 ```python
 >>> match = mypattern.match('hello world?')
 >>> match
-Match<he(l){2}o world(:\?)?>('hello world?', 'hello world?', {0: '?'})
+"Match<he(l){2}o world(:\?)?>('hello world?', 'hello world?', {0: '?'})"
 ```
 
 ##Syntax
