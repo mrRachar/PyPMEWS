@@ -36,11 +36,12 @@ Speed in matching is currently the main problem, probably due to the recursive a
 
 ##Syntax
 * `\<char>` - escape character
-  * `\d` - number
-  * `\c` - letter
-  * `\s` - space/tab
-  * `\w` - alphanumerical
+  * `\d` - number [0-9]
+  * `\c` - letter [A-Za-z]
+  * `\s` - space/tab [  ]
+  * `\w` - alphanumerical [A-Za-z0-9]
   * `\n` - newline
+  * `\b` - breaker [\n\s] 
 * `.` - universal character (except `\n`)
 * `{<num>}` - number repeats
   * `{<x>-<y>}` - from x to y repeats
