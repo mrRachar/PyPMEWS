@@ -10,6 +10,8 @@ def rcprint(value, indent=0):
     if isinstance(value, Tree):
         print(' ' *indent*4, '{}({})'.format(value.__class__, value.name))
         rcprint(value.tree, indent+4)
+    elif isinstance(value, Link):
+        print(' ' *indent*4, '{}({}, name={})'.format(value.__class__, value.link, value.name))
     else:
         print(' ' *indent*4, '{}({})'.format(value.__class__, value.value))
     for x in value.branches:
@@ -42,7 +44,19 @@ class Parser(metaclass=ParserMeta):
                 }.get(expr[index].lower(), expr[index])
                 node <<= Node(char, (char != expr[index] and expr[index].isupper()))
 
-            elif letter in '(':
+            elif letter == '<':
+                startoffset, closeoffset = index + 1, cls.findbalanced("<", ">", expr[index + 1:])
+
+                groupname = None
+                if cls.getcaturegroup(expr[startoffset:index + closeoffset.start]):
+                    length, groupname = cls.getcaturegroup(expr[startoffset:index + closeoffset.start], sideeffect=True)
+                    startoffset += length + 1
+
+                node <<= Link(expr[startoffset:index + closeoffset.start])
+                node.name = groupname
+                index += closeoffset.end - 1  # -1 to account for later +1
+
+            elif letter == '(':
                 startoffset, closeoffset = index + 1, cls.findbalanced("(", ")", expr[index + 1:])
                 group = Tree()
                 node <<= group
@@ -299,8 +313,8 @@ class Parser(metaclass=ParserMeta):
 
 if __name__ == '__main__':
     #print(', '.join("'{}'".format(x) for x in Parser.repeatrange('2-4')))
-    #parsed = Parser.parse('[1-3A-z]hello')
-    parsed = Parser.parse(r'[#alpha#](:m.{3})(:hello|world){2}hell(:o)')
+    parsed = Parser.parse('[1-3A-z]<name>hello')
+    #parsed = Parser.parse(r'[#alpha#](:m.{3})(:hello|world){2}hell(:o)')
     #parsed = Parser.parse('a(hello){2-4}.5\(')
     #parsed = Parser.parse('ak{%2-5}.5\(')
     #parsed = Parser.parse('')

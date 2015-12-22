@@ -11,8 +11,8 @@ class Match:
     the match was found by
 
     If there was no match, an empty one of these will
-    be returned by a Matcher, which is falsy"""
-
+    be returned by a Matcher, which is falsy
+    """
     _match = None       #Store of the match as a string or None
     groups = {}         #All the captures from the match
     expression = ''     #The expression the match was found by

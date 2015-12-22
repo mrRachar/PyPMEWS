@@ -14,7 +14,7 @@ class Node:
     parent = None       #The (main) node this is connected to
 
     @typed
-    def __init__(self, value: str='', negate: bool=False, branches=None, reverse: bool=False):
+    def __init__(self, value: str='', branches=None, *, negate: bool=False, reverse: bool=False):
         """Create a new Node, with the value given
 
         :param value: str: the value of the node
@@ -35,7 +35,7 @@ class Node:
         """
         yield from self.branches    #Return all the branches from the branch list
 
-    def add(self, node, reverse=False):
+    def add(self, node, *, reverse=False):
         """Add a branch to this node
 
         The node will be added the list of branches. If reverse is specified,
@@ -165,11 +165,11 @@ class Tree(Join):
     name = None         #The name of the capture group, if any
 
     @typed
-    def __init__(self, tree=None, branches=None, negate: bool=False, name=None):
+    def __init__(self, tree=None,branches=None, *, negate: bool=False, name=None):
         """Create a new tree, with the given Node (and branches to start), branches
         negation, and capture group name"""
+        super().__init__(branches)      #Call the superclass, Join, with the branches to set them up
         #Assign the parameters to the instance
-        self.branches = branches or []  #If no branches were given, create a new list
         self.tree = tree or Join()      #Create an empty join to add to later if no node was given to start with
         self.negate = negate
         self.name = name
@@ -191,6 +191,71 @@ class Tree(Join):
             'tree': self.tree,                  # and the tree itself
         })
         return configuration                    #Return the configuration of the instance
+
+class Link(Join):
+    """A placeholder referring to another expression, a subclass of Join
+
+    This stores the name of another expression, and when reaches, should cause
+    the matcher to treat the other expression like a subtree. It like trees can
+    have capture groups
+    """
+    name = None
+    _link = ''
+    def __init__(self, link: str, branches=None, *, negate=False, name=None):
+        """Create a new link, with the location of the expression to link to
+
+        Instantiate the new link, which the links location obligatory, and
+        optional branches, negation and name, like a Tree
+        """
+        super().__init__(branches)  #Call the superclass, Join, with the branches to set them up
+        #Assign the parameters to the instance
+        self.name = name
+        self.negate = negate
+        self.link = link
+
+    def __repr__(self) -> str:
+        """Display the link location, and the branches"""
+        return '{}({}, {}, negate={}, name={})'.format(     #Format a string with a replica of initialisation, including:
+            self.__class__.__name__,                        # the class name,
+            self.link,                                      # the link to the expression
+            self.branches,                                  # branches of this node
+            self.negate,                                    # negation of the expression (tree)
+            self.name,                                      # the name of the capture group, (or None)
+        )
+
+    @property
+    @typed
+    def link(self) -> str:
+        """Return the link of this Link
+
+        This is protected behind a property, in order to prevent it being
+        set to empty
+        """
+        return self._link   #Return the hidden link attribute
+
+    @link.setter
+    @typed
+    def link(self, location: str):
+        '''Set the link of this Link
+
+        It cannot be set to empty, doing so will raise an Assertion Error
+        '''
+        assert location != '', "A link location must be provided"   #Make sure a valid location is given
+        self._link = location                                       #Set the link to that location
+
+    @property
+    @typed
+    def configuration(self) -> dict:
+        """Return the configuration of this node"""
+        configuration = super().configuration   #Start with Node's configuration
+        configuration.pop('value')              #Get rid of the value, links have no value
+        configuration.update({                  #Add,
+            'name': self.name,                  # the capture group name
+            'link': self.link,                  # and the link where this goes
+        })
+        return configuration                    #Return the configuration of the instance
+
+
 
 class Span:
     """A section of a text, with a start and an end
