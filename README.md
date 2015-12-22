@@ -26,6 +26,8 @@ True
 {'0': '?'}
 ```
 
+Now you know this, you try and make much more complicated expressions, and have fun :grinning:! Use the [cheat sheet](#syntax) for guidance. 
+
 #### Speed
 * To create the `Matcher` object in the example above, which is when the matching tree is built, in a test took around 3ms
 * The match itself, took around 10 ms
@@ -78,7 +80,7 @@ No `^` start and `$` end yet. Just use methods to achieve same effect.
 \'I would like to say "Hello, Arthur of the Round Table!".\',
 {\'name\': [{\'0\': \'Arthur of the Round Table\'}], \'0\': \'Arthur of the Round Table\'})''' 
 ```
-* The new `$ symbol, for use in names is automatically replaced with the current count (increasing it). This allows for names which automatically have numbers in them, to differentiate them
+* The new `$` symbol, for use in names is automatically replaced with the current count (increasing it). This allows for names which automatically have numbers in them, to differentiate them
 ```python
 '(hello$:...)...' -> {'hello0': ...}
 ```
