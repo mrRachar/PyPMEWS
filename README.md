@@ -29,7 +29,7 @@ True
 Now you know this, you try and make much more complicated expressions, and have fun :grinning:! Use the [cheat sheet](#syntax) for guidance. 
 
 #### Does it work?
-To make sure everything works, please run `test.py`, which should output something like [this](#test-output).
+To make sure everything works, please run `test.py`, which should output something like [this](testresults.md).
 
 #### Speed
 * To create the `Matcher` object in the example above, which is when the matching tree is built, in a test took around 3ms
@@ -71,6 +71,16 @@ Speed in matching is currently the main problem, probably due to the recursive a
 No `^` start and `$` end yet. Just use methods to achieve same effect.
 
 ## Release Changes
+
+### What's New in 1.0.0 [rc 1]
+
+#### Features
+* `test.py` new testing suite to make sure installation completed properly, and as an example
+
+#### Fixes
+* Code clean up, deployment ready clean up, random tests and debugs everywhere swept away
+* `README.md` more complete
+
 ### What's New in 0.2.1
 #### Features
 * Links now collect in sub-dictionaries, which allows for better processing of them, and lists of them to happen
@@ -105,22 +115,3 @@ No `^` start and `$` end yet. Just use methods to achieve same effect.
 * Opened a trove:
   * `+` now gives up
   * ranges working again (checking on a generator expression depleted it, changed to list comprehension)
-  
-## Test Output
-When running `test.py` for the latest version, you should see exactly this (well, except for the font might be different).
-```
-PyPMEWS Tests
-
-Basics Test - do the simple things work
-hello world match: Match<he(l){2}o world(:\?)?>('hello world', 'hello world', {})
-equals hello world: True
-equals hello world?: True
-equals hello world: False
-hello world groups: {'0': '?'}
-bright side of life match: Match<he(l){2}o world(:\?)?>(None, 'bright side of life', {})
-
-Test from 0.2.1 - link capturing with dictionaries
-These two should match:
-Match<Hello, (:<name[]:name>)!>('Hello, Arthur of the Round Table!', 'I would like to say "Hello, Arthur of the Round Table!".', {'name': [{'0': 'Arthur of the Round Table'}], '0': 'Arthur of the Round Table'})
-Match<Hello, (:<name[]:name>)!>('Hello, Arthur of the Round Table!', 'I would like to say "Hello, Arthur of the Round Table!".', {'name': [{'0': 'Arthur of the Round Table'}], '0': 'Arthur of the Round Table'})
-```
