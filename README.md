@@ -64,3 +64,39 @@ Speed in matching is currently the main problem, probably due to the recursive a
   * `<name:x>` - a captured link to x
 
 No `^` start and `$` end yet. Just use methods to achieve same effect.
+
+## Release Changes
+### What's New in 0.2.1
+#### Features
+* Links now collect in sub-dictionaries, which allows for better processing of them, and lists of them to happen
+```python
+>>> mypattern = Matcher('Hello, (:<name[]:name>)!', 
+                         links={'name': Parser(r'(:[A-Z]\c+ (\c{2-} )*[A-Z]\c+)')})
+>>> match = mypattern.search('I would like to say "Hello, Arthur of the Round Table!".')
+#Displayed here over multiple lines for easier viewing
+'''Match<Hello, (:<name[]:name>)!>(\'Hello, Arthur of the Round Table!\',
+\'I would like to say "Hello, Arthur of the Round Table!".\',
+{\'name\': [{\'0\': \'Arthur of the Round Table\'}], \'0\': \'Arthur of the Round Table\'})''' 
+```
+* The new `$ symbol, for use in names is automatically replaced with the current count (increasing it). This allows for names which automatically have numbers in them, to differentiate them
+```python
+'(hello$:...)...' -> {'hello0': ...}
+```
+
+#### Bug Fixes
+* `+` and `*` now work with trees at the end of a group
+* Code cleaned up a little, removed some comments on debugging *etc.*
+
+### What's New in 0.2.0
+#### Features
+* New Links, references to other expressions stored in the matcher, introduced to allow subexpressions to be added, and increase clarity. They are worked out on matching to avoid endless strings in case of recursion
+```python
+>>> mypattern = Matcher('Hello, <name:name>!', links={'name': Parser(r'[A-Z]\c+ (\c{2-} )*[A-Z]\c+')})
+>>> match = mypattern.search('I would like to say "Hello, Arthur of the Round Table!".')
+>>> match
+"Match<Hello, <name:name>!>('Hello, Arthur of the Round Table!', 'I would like to say \"Hello, Arthur of the Round Table!\".', {'name': 'Arthur of the Round Table'})"
+```
+#### Bug Fixes
+* Opened a trove:
+  * `+` now gives up
+  * ranges working again (checking on a generator expression depleted it, changed to list comprehension)
