@@ -2,7 +2,7 @@
 A python implementation of the Pattern Matching and Extraction With Strings system.
 
 #### TLDR;
-Regex with a twist. Capture repeated groups if you want, and more consistant characters and meanings.
+Regex with a twist. Capture repeated groups if you want, and more consistent characters and meanings.
 
 ##### Important!
 Implementation essentially completed, but 100% Python implementation means it mightn't be the fastest module you've seen (see below).
@@ -15,7 +15,7 @@ To create a pattern, just create a new `Matcher` object:
 mypattern = Matcher('he(l){2}o world(:\?)?') 
 ```
 
-To use it, just match it against a string with the `match` method. You will recieve a `Match` object.
+To use it, just match it against a string with the `match` method. You will receive a `Match` object.
 ```python
 >>> match = mypattern.match('hello world?')   #See if 'hello world?' matches the expression
 >>> match                                     #Access the match returned
@@ -42,22 +42,24 @@ Speed in matching is currently the main problem, probably due to the recursive a
   * `\n` - newline
   * `\b` - breaker [\n\s] 
 * `.` - universal character (except `\n`)
-* `{<num>}` - number repeats
-  * `{<x>-<y>}` - from x to y repeats
-  * `{-<y>}` - as many as y repeats
-  * `{<x>-}` - at least x repeats
+* `{num}` - number repeats
+  * `{x-y}` - from x to y repeats
+  * `{-y}` - as many as y repeats
+  * `{x-}` - at least x repeats
   * `*` - 0 or more repetitions
   * `+` - 1 or more repetitions
   * `?` - 0 or 1 repetition (optional)
   * `[*+?]%` - greedless, try as few as possible
-  * `{%<x>-<y>}` - greedless range of repeats
-* `[<x><y><z>]` - any of x, y or z
-  * `[^<x><y><z>]` - anything but x, y, or z
-* `(<expr>)` - a subexpression
-  * `(:<expr>)` - a capture group
-  * `([]:<expr>)` - a capturing collection, will not overide, but instead generate a list, such as when you need to accumulate captures of repeated segments
-  * `(<name>:<expr>)` - a named capture group
-  * `(<name>[]:<expr>)` - a named capturing collection
-* `(<expr_x>|<expr_y)` - choice
+  * `{%x-y}` - greedless range of repeats
+* `[xyz]` - any of x, y or z
+  * `[^xyz]` - anything but x, y, or z
+* `(expr)` - a subexpression
+  * `(:expr)` - a capture group
+  * `([]:expr)` - a capturing collection, will not overide, but instead generate a list, such as when you need to accumulate captures of repeated segments
+  * `(name:expr)` - a named capture group
+  * `(name[]:expr)` - a named capturing collection
+* `(expr_x|expr_y)` - choice
+* `<x>` - a link, to an expression named x
+  * `<name:x>` - a captured link to x
 
-No `^` start and `$` end yet. Just use methods to acheive same effect.
+No `^` start and `$` end yet. Just use methods to achieve same effect.

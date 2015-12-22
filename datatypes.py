@@ -95,10 +95,12 @@ class Node:
 
     @typed
     def __matmul__(self, other) -> bool:
+        """Compare two nodes, to see if they have the same id"""
         try:
+            #If both have ids and they are the same
             return self.id is not None and other.id is not None and self.id == other.id
         except:
-            return False
+            return False    #If one wasn't a node, just return False
 
     @typed
     def __eq__(self, letter: str) -> bool:

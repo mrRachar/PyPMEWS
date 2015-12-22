@@ -6,6 +6,7 @@ from typeenforcing import typed
 ## TODO # CLEAN!
 
 def rcprint(value, indent=0, above=None, superabove=None):
+    """Print a nice display of a tree"""
     if indent > 25:
         return
     if isinstance(value, Tree):
@@ -319,6 +320,7 @@ class Parser(metaclass=ParserMeta):
 
 
 if __name__ == '__main__':
+    ##TESTS##
     #print(', '.join("'{}'".format(x) for x in Parser.repeatrange('2-4')))
     #parsed = Parser.parse('[1-3A-z]<name>hello')
     parsed = Parser(r'[A-Z][a-z] (\c[a-z]){2} [A-Z]\c')

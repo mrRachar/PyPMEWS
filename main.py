@@ -267,15 +267,15 @@ class Matcher:
         letter = string[0]              #Set the letter to be compared against to be the first of the string
         match = Match()                 #Get a match ready, so that later there will be a match, no matter what
 
-        if isinstance(node, (Tree, Link)):                      #If we've got a tree or link
-            if isinstance(node, Link):
-                tree = self.links[node.link].tree
-            else:
-                tree = node.tree
-            if node.negate:                                     #Check if it is negated, and if so
-                match = self.negativecompare(string, tree) # negatively compare it
-            else:                                           #If it is not negated,
-                match = self.compare(string, tree)     # just compare it normally
+        if isinstance(node, (Tree, Link)):          #If we've got a tree or link
+            if isinstance(node, Link):              #If it's a link,
+                tree = self.links[node.link].tree   # make the tree the link's list at that index Tree's tree
+            else:                                   #Otherwise, just like normal,
+                tree = node.tree                    # use the (Tree) node's tree
+            if node.negate:                                 #Check if it is negated, and if so
+                match = self.negativecompare(string, tree)  # negatively compare it
+            else:                                       #If it is not negated,
+                match = self.compare(string, tree)      # just compare it normally
             print(match)
             if not match:           #When no match is made,
                 return match        # return this no match Match
@@ -308,8 +308,8 @@ class Matcher:
         else:               #If it isn't equal and no match was made earlier,
             return match    # then we haven't got a match
 
-
-## TESTS ##
+'''
+## TESTS ## Run these to check things
 
 #a = Matcher('a{%3-5}aa')
 a = Matcher('Hello, ([A-Z]\c+ (\c{2-} )*[A-Z]\c+)', links={'name': Parser(r'[A-Z]\c+ (\c{2-} )*[A-Z]\c+')})
@@ -326,3 +326,4 @@ rcprint(a.tree)
 #timed.timeit(re.match)(r'(name)(hello){2}hello', 'namehellohellohello', timed_repeats=10)
 #print(a.search('hel{1-2}o'))
 rcprint(a.links['name'].tree)
+'''
