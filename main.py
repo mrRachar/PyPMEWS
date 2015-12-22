@@ -1,8 +1,6 @@
 from parsing import Parser, rcprint     #Parses expressions, rcprint for debugging only
 from datatypes import *                 #Handles data to do with expressions
 
-## TODO # comment and clean
-
 class Match:
     """A match of an expression against a string
 
@@ -280,8 +278,11 @@ class Matcher:
                 return match        # return this no match Match
             else:                                       #When we have a match
                 string = string[len(match.match):]      #get rid of the string up till there
-                if node.name:                               #If the tree has a name,
-                    match.update({node.name: match.match})  # add the captured text to it
+                if node.name:
+                    if isinstance(node, Link):          #If the link has a name
+                        match.groups = {'{}:{}'.format(node.name, k): v for k,v in match.groups.items()}
+                    else:                                       #If the tree has a name,
+                        match.update({node.name: match.match})  # add the captured text to it
                 if not string:      #If that leaves the string empty, return
                     #If there are branches, and there is not just one empty Join
                     if node.branches and not (len(node.branches) == 1 and type(node[0]) is Join and not node[0].branches):
@@ -311,9 +312,9 @@ class Matcher:
 ## TESTS ## Run these to check things
 
 #a = Matcher('a{%3-5}aa')
-a = Matcher('Hello, ([A-Z]\c+ (\c{2-} )*[A-Z]\c+)', links={'name': Parser(r'[A-Z]\c+ (\c{2-} )*[A-Z]\c+')})
+#a = Matcher('Hello, ([A-Z]\c+ (\c{2-} )*[A-Z]\c+)', links={'name': Parser(r'[A-Z]\c+ (\c{2-} )*[A-Z]\c+')})
 #a = Matcher(r'[A-Z]\c+ (\c{2-} )*[A-Z]\c+')
-print(a.match('Hello, Matthew Ross Campbell dRachar'))
+#print(a.match('Hello, Matthew Ross Campbell dRachar'))
 #main#a = Matcher(r'\d(word[]:m.{3})(word[]:hello|world){2}hello')
 #a = Matcher('[^efgijk](blur:[^aiouy]ll)o,\s[wd]orl[^t]')
 rcprint(a.tree)

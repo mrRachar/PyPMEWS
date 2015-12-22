@@ -1,7 +1,5 @@
 from typeenforcing import typed
 
-autoid = 0
-
 class Node:
     """A part of a tree, which will match letters
 

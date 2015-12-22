@@ -1,7 +1,6 @@
 from datatypes import *
 from typeenforcing import typed
 
-## FIXME # get rid of the random node at the front of trees with set branches
 ## FIXME # greedless repeats not working again
 ## TODO # CLEAN!
 
