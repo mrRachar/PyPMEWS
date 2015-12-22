@@ -1,6 +1,8 @@
 from parsing import Parser, rcprint     #Parses expressions, rcprint for debugging only
 from datatypes import *                 #Handles data to do with expressions
 
+#TODO end problem came back... in some weird repeat cases (*, + to end only)
+
 class Match:
     """A match of an expression against a string
 
@@ -280,12 +282,13 @@ class Matcher:
                 string = string[len(match.match):]      #get rid of the string up till there
                 if node.name:
                     if isinstance(node, Link):          #If the link has a name
-                        match.groups = {'{}:{}'.format(node.name, k): v for k,v in match.groups.items()}
+                        match.groups, linkgroups = {}, match.groups     #Reset the match groups, storing them
+                        match.update({node.name: linkgroups})           # to be added under the link's name
                     else:                                       #If the tree has a name,
                         match.update({node.name: match.match})  # add the captured text to it
                 if not string:      #If that leaves the string empty, return
-                    #If there are branches, and there is not just one empty Join
-                    if node.branches and not (len(node.branches) == 1 and type(node[0]) is Join and not node[0].branches):
+                    #If there are branches, and none of them are dead ends
+                    if node.branches and not any(type(branch) is Join and not branch.branches for branch in node):
                         return Match()  #Then the tree is not yet exhausted, so there wasn't a match
                     return match    #Seeing as the tree is exhausted, we can return the match we have made
                 letter = string[0]                          #Reset the letter to the beginning of the new string

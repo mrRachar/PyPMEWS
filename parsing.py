@@ -284,9 +284,12 @@ class Parser(metaclass=ParserMeta):
         if name == '':
             cls.capturenumber += int(sideeffect)
             return length, (str(cls.capturenumber -1) if not isarray else str(cls.capturenumber -1) + '[]')
-        if not name[0].isalpha() or not all(letter.isalnum() for letter in name[1:]):
+        if not name[0].isalpha() and not name[0] == '$' or not all(letter.isalnum() or letter == '$' for letter in name[1:]):
             return False
         else:
+            if "$" in name:
+                cls.capturenumber += int(sideeffect)
+                name = name.replace("$", str(cls.capturenumber-1))
             return length, name + ('' if not isarray else '[]')
 
     @classmethod

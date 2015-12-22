@@ -151,7 +151,7 @@ class Node:
 class Join(Node):
     """An empty node, used to connect branches back together"""
     @typed
-    def __init__(self, branches=None, id = None):
+    def __init__(self, branches=None, id=None):
         """Create a new Join, with the given branches"""
         self.branches = branches or [] #Set the instance attribute to the given branch, unless None was, then create a new list of branches
         self.id = id or self.__class__.autoid
@@ -181,12 +181,12 @@ class Tree(Join):
     name = None         #The name of the capture group, if any
 
     @typed
-    def __init__(self, tree=None,branches=None, *, negate: bool=False, name=None):
+    def __init__(self, tree=None,branches=None, *, negate: bool=False, name=None, id=None):
         """Create a new tree, with the given Node (and branches to start), branches
         negation, and capture group name"""
-        super().__init__(branches)      #Call the superclass, Join, with the branches to set them up
+        super().__init__(branches, id=id)   #Call the superclass, Join, with the branches to set them up, and the id argument
         #Assign the parameters to the instance
-        self.tree = tree or Join()      #Create an empty join to add to later if no node was given to start with
+        self.tree = tree or Join()          #Create an empty join to add to later if no node was given to start with
         self.negate = negate
         self.name = name
 
@@ -217,13 +217,13 @@ class Link(Join):
     """
     name = None
     _link = ''
-    def __init__(self, link: str, branches=None, *, negate=False, name=None):
+    def __init__(self, link: str, branches=None, *, negate=False, name=None, id=None):
         """Create a new link, with the location of the expression to link to
 
         Instantiate the new link, which the links location obligatory, and
         optional branches, negation and name, like a Tree
         """
-        super().__init__(branches)  #Call the superclass, Join, with the branches to set them up
+        super().__init__(branches, id=id)   #Call the superclass, Join, with the branches, and id, to set them up
         #Assign the parameters to the instance
         self.name = name
         self.negate = negate
