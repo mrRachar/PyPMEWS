@@ -58,23 +58,9 @@ Speed in matching is currently the main problem, probably due to the recursive a
   * `([]:expr)` - a capturing collection, will not overide, but instead generate a list, such as when you need to accumulate captures of repeated segments
   * `(name:expr)` - a named capture group
   * `(name[]:expr)` - a named capturing collection
+  * `(name$:expr)` - a named capturing group with an autofilled number (`$` works anywhere)
 * `(expr_x|expr_y)` - choice
 * `<x>` - a link, to an expression named x
   * `<name:x>` - a captured link to x
 
 No `^` start and `$` end yet. Just use methods to achieve same effect.
-
-## Release Changes
-### What's New in 0.2.0
-#### Features
-* New Links, references to other expressions stored in the matcher, introduced to allow subexpressions to be added, and increase clarity. They are worked out on matching to avoid endless strings in case of recursion
-```python
->>> mypattern = Matcher('Hello, <name:name>!', links={'name': Parser(r'[A-Z]\c+ (\c{2-} )*[A-Z]\c+')})
->>> match = mypattern.search('I would like to say "Hello, Arthur of the Round Table!".')
->>> match
-"Match<Hello, <name:name>!>('Hello, Arthur of the Round Table!', 'I would like to say \"Hello, Arthur of the Round Table!\".', {'name': 'Arthur of the Round Table'})"
-```
-#### Bug Fixes
-* Opened a trove:
-  * `+` now gives up
-  * ranges working again (checking on a generator expression depleted it, changed to list comprehension)

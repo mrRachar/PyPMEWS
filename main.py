@@ -1,7 +1,6 @@
 from parsing import Parser, rcprint     #Parses expressions, rcprint for debugging only
 from datatypes import *                 #Handles data to do with expressions
 
-#TODO end problem came back... in some weird repeat cases (*, + to end only)
 
 class Match:
     """A match of an expression against a string

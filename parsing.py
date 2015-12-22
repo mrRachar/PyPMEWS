@@ -3,6 +3,7 @@ from typeenforcing import typed
 
 ## FIXME # greedless repeats not working again
 ## TODO # CLEAN!
+## TODO # check #name#s
 
 def rcprint(value, indent=0, above=None, superabove=None):
     """Print a nice display of a tree"""
@@ -185,7 +186,7 @@ class Parser(metaclass=ParserMeta):
             stringcont = string[index:]
             if string[index] == '#' and '#' in string[index+1:]:
                 index += 1 #pass by first '#'
-                letters.append(string[index:string.index('#', index)]) #HERE
+                letters.append(string[index:string.index('#', index)])
                 index += string.index('#', index)
             elif len(stringcont) > 1 and stringcont[1] == '-':
                 letters.append(string[index:index + 3])
