@@ -1,5 +1,7 @@
 from typeenforcing import typed
 
+autoid = 0
+
 class Node:
     """A part of a tree, which will match letters
 
@@ -12,9 +14,11 @@ class Node:
     branches = []       #The nodes this node is connected to
     reverse = False     #Whether the branches should be reverse-checked
     parent = None       #The (main) node this is connected to
+    id = None           #To identify clones
+    autoid = 0          #Universal ID number
 
     @typed
-    def __init__(self, value: str='', branches=None, *, negate: bool=False, reverse: bool=False):
+    def __init__(self, value: str='', branches=None, *, negate: bool=False, reverse: bool=False, id=None):
         """Create a new Node, with the value given
 
         :param value: str: the value of the node
@@ -27,6 +31,8 @@ class Node:
         self.branches = branches or []  #If no branch list was given, create a new list
         self.negate = negate
         self.reverse = reverse
+        self.id = id or self.__class__.autoid
+        self.__class__.autoid += 1
 
     def __iter__(self):
         """Iterate through all the branches that the node has
@@ -88,6 +94,13 @@ class Node:
         return '{}({!r}, {!r}, {!r})'.format(self.__class__.__name__, self.value, self.negate, self.branches)
 
     @typed
+    def __matmul__(self, other) -> bool:
+        try:
+            return self.id is not None and other.id is not None and self.id == other.id
+        except:
+            return False
+
+    @typed
     def __eq__(self, letter: str) -> bool:
         """Sees if the node could be equal to the letter
 
@@ -128,6 +141,7 @@ class Node:
             'value': self.value,
             'negate': self.negate,
             'branches': list(self.branches),
+            'id': self.id
         }
 
     def copy(self):
@@ -137,9 +151,11 @@ class Node:
 class Join(Node):
     """An empty node, used to connect branches back together"""
     @typed
-    def __init__(self, branches=None):
+    def __init__(self, branches=None, id = None):
         """Create a new Join, with the given branches"""
         self.branches = branches or [] #Set the instance attribute to the given branch, unless None was, then create a new list of branches
+        self.id = id or self.__class__.autoid
+        self.__class__.autoid += 1
 
     @typed
     def __repr__(self) -> str:

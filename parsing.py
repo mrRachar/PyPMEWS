@@ -2,20 +2,24 @@ from datatypes import *
 from typeenforcing import typed
 
 ## FIXME # get rid of the random node at the front of trees with set branches
+## FIXME # greedless repeats not working again
 ## TODO # CLEAN!
 
-def rcprint(value, indent=0):
-    if indent > 20:
+def rcprint(value, indent=0, above=None, superabove=None):
+    if indent > 25:
         return
     if isinstance(value, Tree):
         print(' ' *indent*4, '{}({})'.format(value.__class__, value.name))
-        rcprint(value.tree, indent+4)
+        rcprint(value.tree, indent+4, value, above)
     elif isinstance(value, Link):
         print(' ' *indent*4, '{}({}, name={})'.format(value.__class__, value.link, value.name))
     else:
         print(' ' *indent*4, '{}({})'.format(value.__class__, value.value))
     for x in value.branches:
-        rcprint(x, indent+1)
+        if x @ value and above @ x and superabove @ x:
+            print(' ' *(indent*4+4) , '-- Repeating')
+        else:
+            rcprint(x, indent+1, value, above)
 
 
 class ParserMeta(type):
@@ -126,8 +130,11 @@ class Parser(metaclass=ParserMeta):
             elif letter == '+':
                 greedless = expr[index + 1] == '%' if len(expr) > index + 1 else False
                 node.reverse = greedless
+                joiner = Join()
                 node <<= node
+                node.add(joiner)
                 index += 1 + greedless
+                node = joiner
                 continue
 
             elif letter == '?':
@@ -208,7 +215,7 @@ class Parser(metaclass=ParserMeta):
         def getrange(string: str):
             if '-' not in string:
                 return None
-            strings = (number.strip('\t ') for number in string.split('-'))
+            strings = [number.strip('\t ') for number in string.split('-')]
             if not all(number.isdigit() or not number for number in strings):
                 return None
             return strings
@@ -313,11 +320,12 @@ class Parser(metaclass=ParserMeta):
 
 if __name__ == '__main__':
     #print(', '.join("'{}'".format(x) for x in Parser.repeatrange('2-4')))
-    parsed = Parser.parse('[1-3A-z]<name>hello')
+    #parsed = Parser.parse('[1-3A-z]<name>hello')
+    parsed = Parser(r'[A-Z][a-z] (\c[a-z]){2} [A-Z]\c')
     #parsed = Parser.parse(r'[#alpha#](:m.{3})(:hello|world){2}hell(:o)')
     #parsed = Parser.parse('a(hello){2-4}.5\(')
-    #parsed = Parser.parse('ak{%2-5}.5\(')
+    #parsed = Parser.parse('a+')
     #parsed = Parser.parse('')
     #print('OUTPUT:', parsed)
 
-    rcprint(parsed)
+    rcprint(parsed.tree)

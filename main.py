@@ -135,7 +135,8 @@ class Matcher:
     """
     __expression = None     #The private underlying expression, never to be directly changed so always to be a direct representation of the tree
     tree = None             #The tree matched against strings
-    def __init__(self, expr: str):
+    links = {}
+    def __init__(self, expr: str, *, links=None):
         """Create a new matcher from the expression
 
         Sets the expression to the instance property, which is then
@@ -143,8 +144,12 @@ class Matcher:
         both are stored
 
         To be used to match against strings
+
+        :param expr: str: the expression to be broken into a tree and compared to strings
+        :param links: dict, LinksCollection: the dictionary of links to use
         """
-        self.expression = expr  #Set the expression to the property, so it will automatically be parsed and set to the tree
+        self.expression = expr      #Set the expression to the property, so it will automatically be parsed and set to the tree
+        self.links = links or {}    #Set the links to the links provided, otherwise make a new dictionary of them
 
     @property
     @typed
@@ -262,12 +267,17 @@ class Matcher:
         letter = string[0]              #Set the letter to be compared against to be the first of the string
         match = Match()                 #Get a match ready, so that later there will be a match, no matter what
 
-        if isinstance(node, Tree):                              #If we've got a tree
+        if isinstance(node, (Tree, Link)):                      #If we've got a tree or link
+            if isinstance(node, Link):
+                tree = self.links[node.link].tree
+            else:
+                tree = node.tree
             if node.negate:                                     #Check if it is negated, and if so
-                match = self.negativecompare(string, node.tree) # negatively compare it
+                match = self.negativecompare(string, tree) # negatively compare it
             else:                                           #If it is not negated,
-                match = self.compare(string, node.tree)     # just compare it normally
-            if not match:           #When no match is made
+                match = self.compare(string, tree)     # just compare it normally
+            print(match)
+            if not match:           #When no match is made,
                 return match        # return this no match Match
             else:                                       #When we have a match
                 string = string[len(match.match):]      #get rid of the string up till there
@@ -291,23 +301,28 @@ class Matcher:
                     match += branchmatch    #Add the match of the branch onto this match,
                     return match            # and return it all
                 else:               #If there was never a match made in the branches
-                    return Match()  # return an empty match
-            else:                                                           #If there are no branches,
-                return Match(letter if not isinstance(node, Join) else '')  # return what we got
+                    return match    # return an empty match #todo make sure returning not new instances is ok
+            else:                                                               #If there are no branches,
+                match += Match(letter if not isinstance(node, Join) else '')    # add the last letter on and,
+                return match                                                    # return what we got
         else:               #If it isn't equal and no match was made earlier,
-            return Match()  # then we haven't got a match
+            return match    # then we haven't got a match
 
 
 ## TESTS ##
 
 #a = Matcher('a{%3-5}aa')
-a = Matcher(r'\d(word[]:m.{3})(word[]:hello|world){2}hello')
+a = Matcher('Hello, ([A-Z]\c+ (\c{2-} )*[A-Z]\c+)', links={'name': Parser(r'[A-Z]\c+ (\c{2-} )*[A-Z]\c+')})
+#a = Matcher(r'[A-Z]\c+ (\c{2-} )*[A-Z]\c+')
+print(a.match('Hello, Matthew Ross Campbell dRachar'))
+#main#a = Matcher(r'\d(word[]:m.{3})(word[]:hello|world){2}hello')
 #a = Matcher('[^efgijk](blur:[^aiouy]ll)o,\s[wd]orl[^t]')
-#rcprint(a.tree)
-print(a.match('9mnnehelloworldhelloj'))
+rcprint(a.tree)
+#main#print(a.match('9mnnehelloworldhelloj'))
 #print(a.match('9mnnehellohellohello'))
-#m = Matcher('kkk(e){4}')
-#print(m.match('kkkeeeee'))
+#m = Matcher('kk(e){4}')
+#print(m.match('kkeeeee'))
 #timed.timeit(a.match)('namehellohellohello', timed_repeats=10)
 #timed.timeit(re.match)(r'(name)(hello){2}hello', 'namehellohellohello', timed_repeats=10)
 #print(a.search('hel{1-2}o'))
+rcprint(a.links['name'].tree)
