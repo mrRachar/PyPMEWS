@@ -7,7 +7,7 @@ Regex with a twist. Capture repeated groups if you want, and more consistent cha
 ##### Important!
 Implementation essentially completed, but 100% Python implementation means it mightn't be the fastest module you've seen (see below).
 
-##How To Use
+## How To Use
 To create a pattern, just create a new `Matcher` object:
 
 ```python
@@ -26,14 +26,14 @@ True
 {'0': '?'}
 ```
 
-####Speed
+#### Speed
 * To create the `Matcher` object in the example above, which is when the matching tree is built, in a test took around 3ms
 * The match itself, took around 10 ms
 * Using the search method, can take significantly longer, but in general doesn't
 
 Speed in matching is currently the main problem, probably due to the recursive approach. A iterative approach may be taken to speed things up in the future.
 
-##Syntax
+## Syntax
 * `\<char>` - escape character
   * `\d` - number [0-9]
   * `\c` - letter [A-Za-z]
@@ -63,3 +63,18 @@ Speed in matching is currently the main problem, probably due to the recursive a
   * `<name:x>` - a captured link to x
 
 No `^` start and `$` end yet. Just use methods to achieve same effect.
+
+## Release Changes
+### What's New in 0.2.0
+#### Features
+* New Links, references to other expressions stored in the matcher, introduced to allow subexpressions to be added, and increase clarity. They are worked out on matching to avoid endless strings in case of recursion
+```python
+>>> mypattern = Matcher('Hello, <name:name>!', links={'name': Parser(r'[A-Z]\c+ (\c{2-} )*[A-Z]\c+')})
+>>> match = mypattern.search('I would like to say "Hello, Arthur of the Round Table!".')
+>>> match
+"Match<Hello, <name:name>!>('Hello, Arthur of the Round Table!', 'I would like to say \"Hello, Arthur of the Round Table!\".', {'name': 'Arthur of the Round Table'})"
+```
+#### Bug Fixes
+* Opened a trove:
+  * `+` now gives up
+  * ranges working again (checking on a generator expression depleted it, changed to list comprehension)
