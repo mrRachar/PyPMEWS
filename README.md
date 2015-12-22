@@ -28,6 +28,9 @@ True
 
 Now you know this, you try and make much more complicated expressions, and have fun :grinning:! Use the [cheat sheet](#syntax) for guidance. 
 
+#### Does it work?
+To make sure everything works, please run `test.py`, which should output something like [this](#test-output).
+
 #### Speed
 * To create the `Matcher` object in the example above, which is when the matching tree is built, in a test took around 3ms
 * The match itself, took around 10 ms
@@ -102,3 +105,22 @@ No `^` start and `$` end yet. Just use methods to achieve same effect.
 * Opened a trove:
   * `+` now gives up
   * ranges working again (checking on a generator expression depleted it, changed to list comprehension)
+  
+## Test Output
+When running `test.py` for the latest version, you should see exactly this (well, except for the font might be different).
+```
+PyPMEWS Tests
+
+Basics Test - do the simple things work
+hello world match: Match<he(l){2}o world(:\?)?>('hello world', 'hello world', {})
+equals hello world: True
+equals hello world?: True
+equals hello world: False
+hello world groups: {'0': '?'}
+bright side of life match: Match<he(l){2}o world(:\?)?>(None, 'bright side of life', {})
+
+Test from 0.2.1 - link capturing with dictionaries
+These two should match:
+Match<Hello, (:<name[]:name>)!>('Hello, Arthur of the Round Table!', 'I would like to say "Hello, Arthur of the Round Table!".', {'name': [{'0': 'Arthur of the Round Table'}], '0': 'Arthur of the Round Table'})
+Match<Hello, (:<name[]:name>)!>('Hello, Arthur of the Round Table!', 'I would like to say "Hello, Arthur of the Round Table!".', {'name': [{'0': 'Arthur of the Round Table'}], '0': 'Arthur of the Round Table'})
+```

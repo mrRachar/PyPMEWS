@@ -1,9 +1,8 @@
 from datatypes import *
 from typeenforcing import typed
 
-## FIXME # greedless repeats not working again
-## TODO # CLEAN!
-## TODO # check #name#s
+#Comments are scarce
+#For further clarification please contact ... I have family ... don't do this ... nooo! ... nobody
 
 def rcprint(value, indent=0, above=None, superabove=None):
     """Print a nice display of a tree"""
@@ -323,14 +322,6 @@ class Parser(metaclass=ParserMeta):
 
 
 if __name__ == '__main__':
-    ##TESTS##
-    #print(', '.join("'{}'".format(x) for x in Parser.repeatrange('2-4')))
-    #parsed = Parser.parse('[1-3A-z]<name>hello')
+    print('Test:')
     parsed = Parser(r'[A-Z][a-z] (\c[a-z]){2} [A-Z]\c')
-    #parsed = Parser.parse(r'[#alpha#](:m.{3})(:hello|world){2}hell(:o)')
-    #parsed = Parser.parse('a(hello){2-4}.5\(')
-    #parsed = Parser.parse('a+')
-    #parsed = Parser.parse('')
-    #print('OUTPUT:', parsed)
-
     rcprint(parsed.tree)

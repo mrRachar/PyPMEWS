@@ -1,7 +1,6 @@
 from parsing import Parser, rcprint     #Parses expressions, rcprint for debugging only
 from datatypes import *                 #Handles data to do with expressions
 
-
 class Match:
     """A match of an expression against a string
 
@@ -309,23 +308,3 @@ class Matcher:
                 return match                                                    # return what we got
         else:               #If it isn't equal and no match was made earlier,
             return match    # then we haven't got a match
-
-'''
-## TESTS ## Run these to check things
-
-#a = Matcher('a{%3-5}aa')
-#a = Matcher('Hello, ([A-Z]\c+ (\c{2-} )*[A-Z]\c+)', links={'name': Parser(r'[A-Z]\c+ (\c{2-} )*[A-Z]\c+')})
-#a = Matcher(r'[A-Z]\c+ (\c{2-} )*[A-Z]\c+')
-#print(a.match('Hello, Matthew Ross Campbell dRachar'))
-#main#a = Matcher(r'\d(word[]:m.{3})(word[]:hello|world){2}hello')
-#a = Matcher('[^efgijk](blur:[^aiouy]ll)o,\s[wd]orl[^t]')
-rcprint(a.tree)
-#main#print(a.match('9mnnehelloworldhelloj'))
-#print(a.match('9mnnehellohellohello'))
-#m = Matcher('kk(e){4}')
-#print(m.match('kkeeeee'))
-#timed.timeit(a.match)('namehellohellohello', timed_repeats=10)
-#timed.timeit(re.match)(r'(name)(hello){2}hello', 'namehellohellohello', timed_repeats=10)
-#print(a.search('hel{1-2}o'))
-rcprint(a.links['name'].tree)
-'''
