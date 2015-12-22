@@ -276,7 +276,6 @@ class Matcher:
                 match = self.negativecompare(string, tree)  # negatively compare it
             else:                                       #If it is not negated,
                 match = self.compare(string, tree)      # just compare it normally
-            print(match)
             if not match:           #When no match is made,
                 return match        # return this no match Match
             else:                                       #When we have a match
