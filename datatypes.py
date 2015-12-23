@@ -99,7 +99,7 @@ class Node:
         )
 
     @typed
-    def __matmul__(self, other) -> bool:
+    def __mod__(self, other) -> bool:
         """Compare two nodes, to see if they have the same id"""
         try:
             #If both have ids and they are the same

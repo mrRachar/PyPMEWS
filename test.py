@@ -47,6 +47,6 @@ mypattern = Matcher('-?[1-9](\d{-2}(_\d{3})+|\d*)(\.\d+(e\d+)?)?')
 use = """mypattern.match('23_333_211_334_033_211_222.332e10')"""
 repeats = 200
 print('pattern make: (average of', repeats, 'tests)')
-print(timeit(make, globals=globals(), number=repeats)/repeats)
+print(timeit(make, setup="from __main__ import Matcher", number=repeats)/repeats)
 print('pattern match:')
-print(timeit(use, globals=globals(), number=repeats)/repeats)
+print(timeit(use, setup="from __main__ import mypattern", number=repeats)/repeats)

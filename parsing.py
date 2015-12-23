@@ -16,7 +16,7 @@ def rcprint(value, indent=0, above=None, superabove=None):
     else:
         print(' ' *indent*4, '{}({})'.format(value.__class__, value.value))
     for x in value.branches:
-        if x @ value and above @ x and superabove @ x:
+        if x % value and above % x and superabove % x:
             print(' ' *(indent*4+4) , '-- Repeating')
         else:
             rcprint(x, indent+1, value, above)
