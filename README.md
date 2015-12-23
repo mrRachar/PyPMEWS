@@ -72,6 +72,11 @@ No `^` start and `$` end yet. Just use methods to achieve same effect.
 
 ## Release Changes
 
+### What's new in 1.0.1 - Aldwych
+
+#### Features
+* Added compatibility with Python 3.4, and probably as low as 3.2
+
 ### What's New in 1.0.0 - Aldwych
 
 #### Features
