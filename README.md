@@ -26,7 +26,7 @@ True
 {'0': '?'}
 ```
 
-Now you know this, you try and make much more complicated expressions, and have fun :grinning:! Use the [cheat sheet](#syntax) for guidance. 
+Now you know this, you try and make much more complicated expressions, and have fun :grinning:! Use the [cheat sheet](#syntax) for guidance, and [`test.py`](test.py) contains some examples.
 
 #### Does it work?
 To make sure everything works, please run `test.py`, which should output something like [this](testresults.md).
@@ -72,12 +72,17 @@ No `^` start and `$` end yet. Just use methods to achieve same effect.
 
 ## Release Changes
 
-### What's New in 1.0.0 [rc 1]
+### What's New in 1.0.0
 
 #### Features
-* `test.py` new testing suite to make sure installation completed properly, and as an example
+* `test.py` new testing suite to make sure installation completed properly, and as an example, including a new speed test, and more complicated tests
 
 #### Fixes
+* Issue #7 has been fixed, meaning:
+  * Extra matching has been resolved by realising the first checks should be checking this node and not branches for emptiness, which actually greatly simplifies it.
+  * Also, though if the first emptiness checks find a join with an empty join, they will treat that also as a match, which makes it complicated again.
+  * Laziness :last_quarter_moon_with_face:, which has been at the end of groups, has been solved by changing `match` -> `Match()`, because, although `match` might have seemed empty, the tree matching section actually filled it. This does not go against a previous problem where correctly matched trees we're failing, this was done in between where adding to it instead of creating anew occurred.
+* Timings now done with python module
 * Code clean up, deployment ready clean up, random tests and debugs everywhere swept away
 * `README.md` more complete
 
