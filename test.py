@@ -1,4 +1,5 @@
 from main import Matcher, Parser
+from timeit import timeit
 
 print('PyPMEWS Tests')
 
@@ -22,3 +23,30 @@ mypattern = Matcher('Hello, (:<name[]:name>)!',
 match = mypattern.search('I would like to say "Hello, Arthur of the Round Table!".')
 print('These two should match:', match, sep='\n')
 print('''Match<Hello, (:<name[]:name>)!>('Hello, Arthur of the Round Table!', 'I would like to say "Hello, Arthur of the Round Table!".', {'name': [{'0': 'Arthur of the Round Table'}], '0': 'Arthur of the Round Table'})''')
+
+#Complicated Number Test - tests most of groups and repeats, by matching it to numbers
+print('\nComplicated Number Test - make sure it all works')
+print('In cases of invalid tests, it should match a lesser part of the number in most cases')
+mypattern = Matcher('-?[1-9](\d{-2}(,\d{3})+|\d*)(\.\d+(e\d+)?)?')
+print('42 (valid):', mypattern.match('42').match)
+print('4d2 (invalid):', mypattern.match('4d2').match)
+print('1701 (valid):', mypattern.match('1701').match)
+print('1,701 (valid):', mypattern.match('1,701').match)
+print('1,70,1 (invalid):', mypattern.match('1,70,1').match)
+print('1,701.112 (valid):', mypattern.match('1,701.112').match)
+print('1,701.112e10 (valid):', mypattern.match('1,701.112e10').match)
+print('1,701.112e1,0 (invalid):', mypattern.match('1,701.112e1,0').match)
+
+
+
+
+##Speed Test - let's see how fast it is, using the Complicated Number Test
+print('\nSpeed Tests - lets see how fast it goes!')
+make = """Matcher('-?[1-9](\d{-2}(_\d{3})+|\d*)(\.\d+(e\d+)?)?')"""   #Make the pattern
+mypattern = Matcher('-?[1-9](\d{-2}(_\d{3})+|\d*)(\.\d+(e\d+)?)?')
+use = """mypattern.match('23_333_211_334_033_211_222.332e10')"""
+repeats = 200
+print('pattern make: (average of', repeats, 'tests)')
+print(timeit(make, globals=globals(), number=repeats)/repeats)
+print('pattern match:')
+print(timeit(use, globals=globals(), number=repeats)/repeats)

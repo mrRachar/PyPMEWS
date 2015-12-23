@@ -88,8 +88,15 @@ class Node:
     @typed
     def __repr__(self) -> str:
         """Represent the node, in initialisation form"""
-        #Format a string with all the initialisation arguments
-        return '{}({!r}, {!r}, {!r})'.format(self.__class__.__name__, self.value, self.negate, self.branches)
+        #Format a string with all the initialisation arguments value
+        return '{}({!r}, {!r}, negate={!r}, reverse={!r}, id={!r})'.format(
+            self.__class__.__name__,
+            self.value,
+            self.branches,
+            self.negate,
+            self.reverse,
+            self.id
+        )
 
     @typed
     def __matmul__(self, other) -> bool:
@@ -161,7 +168,7 @@ class Join(Node):
     def __repr__(self) -> str:
         """Represent the node, in initialisation form"""
         #Format a string with all the initialisation arguments
-        return '{}({!r})'.format(self.__class__.__name__, self.branches)
+        return '{}({!r}, id={!r})'.format(self.__class__.__name__, self.branches, self.id)
 
     @typed
     def __eq__(self, string: str) -> bool:
@@ -193,8 +200,15 @@ class Tree(Join):
     @typed
     def __repr__(self) -> str:
         """Display the tree of nodes"""
-        #Return the class name, and the tree of nodes in a string
-        return '{}({})'.format(self.__class__.__name__, self.tree)
+        #Return the class name, and the tree of nodes in a string tree=None,branches=None, *, negate: bool=False, name=None, id=None)
+        return '{}({!r}, {!r}, negate={!r}, name={!r}, id={!r})'.format(
+            self.__class__.__name__,
+            self.tree,
+            self.branches,
+            self.negate,
+            self.name,
+            self.id
+        )
 
     @property
     @typed
@@ -231,12 +245,13 @@ class Link(Join):
 
     def __repr__(self) -> str:
         """Display the link location, and the branches"""
-        return '{}({}, {}, negate={}, name={})'.format(     #Format a string with a replica of initialisation, including:
-            self.__class__.__name__,                        # the class name,
-            self.link,                                      # the link to the expression
-            self.branches,                                  # branches of this node
-            self.negate,                                    # negation of the expression (tree)
-            self.name,                                      # the name of the capture group, (or None)
+        return '{}({}, {}, negate={}, name={}, id={})'.format(  #Format a string with a replica of initialisation, including:
+            self.__class__.__name__,                            # the class name,
+            self.link,                                          # the link to the expression
+            self.branches,                                      # branches of this node
+            self.negate,                                        # negation of the expression (tree)
+            self.name,                                          # the name of the capture group, (or None),
+            self.id,                                            # the unique (except clones) id of the node
         )
 
     @property

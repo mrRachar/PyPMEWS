@@ -258,7 +258,8 @@ class Matcher:
         node = node or self.tree.tree   #If there was no node given, default to the node at the top of the tree
         if string == '':    #If we've run out of string
             #Check to see if the tree is not exhausted (there are more branches, and not just one empty Join at most)
-            if node.branches and not (len(node.branches) == 1 and type(node.branches[0]) is Join and not node.branches[0].branches):
+            #if node.branches and if it is a join, it doesn't have an empty join in it
+            if type(node) is not Join or node.branches and all(type(branch) is not Join or branch.branches for branch in node):
                 return Match()      #Then the tree is not yet exhausted, so there wasn't a match with the entire tree
             else:                   #If the tree has been exhausted as well as the string, the match is successful,
                 return Match('')    # but with no letter, so return a non-falsy empty string match is returned
@@ -285,8 +286,8 @@ class Matcher:
                     else:                                       #If the tree has a name,
                         match.update({node.name: match.match})  # add the captured text to it
                 if not string:      #If that leaves the string empty, return
-                    #If there are branches, and none of them are dead ends
-                    if node.branches and not any(type(branch) is Join and not branch.branches for branch in node):
+                    #If there are branches, and all of them aren't Joins, or if they are, have branches
+                    if node.branches and all(type(branch) is not Join or branch.branches for branch in node):
                         return Match()  #Then the tree is not yet exhausted, so there wasn't a match
                     return match    #Seeing as the tree is exhausted, we can return the match we have made
                 letter = string[0]                          #Reset the letter to the beginning of the new string
@@ -302,9 +303,9 @@ class Matcher:
                     match += branchmatch    #Add the match of the branch onto this match,
                     return match            # and return it all
                 else:               #If there was never a match made in the branches
-                    return match    # return an empty match #todo make sure returning not new instances is ok
+                    return Match()  # return an empty match
             else:                                                               #If there are no branches,
                 match += Match(letter if not isinstance(node, Join) else '')    # add the last letter on and,
                 return match                                                    # return what we got
         else:               #If it isn't equal and no match was made earlier,
-            return match    # then we haven't got a match
+            return Match()  # then we haven't got a match
