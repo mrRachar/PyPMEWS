@@ -72,7 +72,7 @@ No `^` start and `$` end yet. Just use methods to achieve same effect.
 
 ## Release Changes
 
-### What's New in 1.0.0
+### What's New in 1.0.0 - Aldwych
 
 #### Features
 * `test.py` new testing suite to make sure installation completed properly, and as an example, including a new speed test, and more complicated tests
