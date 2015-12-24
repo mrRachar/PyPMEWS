@@ -72,6 +72,11 @@ No `^` start and `$` end yet. Just use methods to achieve same effect.
 
 ## Release Changes
 
+## What's new in 1.0.2 - Aldwych
+
+### Fixes
+* should now work better as a module, `main.py` -> `__init__.py`
+
 ### What's new in 1.0.1 - Aldwych
 
 #### Features
