@@ -1,4 +1,4 @@
-from main import Matcher, Parser
+from __init__ import Matcher, Parser
 from timeit import timeit
 
 print('PyPMEWS Tests')
