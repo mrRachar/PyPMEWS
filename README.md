@@ -5,7 +5,7 @@ A python implementation of the Pattern Matching and Extraction With Strings syst
 Regex with a twist. Capture repeated groups if you want, and more consistent characters and meanings.
 
 ##### Important!
-Implementation essentially completed, but 100% Python implementation means it mightn't be the fastest module you've seen (see below).
+Works with Python 3.4+, but shouldn't give 3.2+ a hassle. 100% Python implementation means it mightn't be the fastest module you've seen (see below).
 
 ## How To Use
 To create a pattern, just create a new `Matcher` object:

@@ -1,5 +1,5 @@
 ## Test Output
-When running `test.py` for the latest version, you should see exactly this (well, except for the font might be different).
+When running `test.py` for the latest version, you should see exactly this (well, except for the speed tests and font might be different).
 ```
 PyPMEWS Tests
 
@@ -29,8 +29,8 @@ In cases of invalid tests, it should match a lesser part of the number in most c
 
 Speed Tests - lets see how fast it goes!
 pattern make: (average of 200 tests)
-0.004639228822180856
+0.00...
 pattern match:
-0.019925895326346654
+0.0...
 ```
 Please note the speed test here is harder than the one given in the [read-me](README.md)
